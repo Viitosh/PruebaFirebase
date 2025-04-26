@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro de Citas - Clínica Odontológica</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #e0f7fa;
+            color: #003d66;
+        }
+        h1 {
+            text-align: center;
+            color: #002147;
+            margin-top: 20px;
+        }
+        form {
+            background: #ffffff;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            max-width: 450px;
+            margin: 30px auto;
+            border: 1px solid #007bb8;
+        }
+        input, select, textarea {
+            width: calc(100% - 22px);
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border: 1px solid #007bb8;
+            box-sizing: border-box; 
+        }
+        button {
+            background: #007bb8;
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 16px;
+        }
+        button:hover {
+            background: #005f8d;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Registro de Citas</h1>
+<form id="appointmentForm">
+    <input type="text" id="name" placeholder="Nombre Completo" required>
+    <input type="email" id="email" placeholder="Correo Electrónico" required>
+    <input type="tel" id="phone" placeholder="Teléfono" required>
+    <input type="date" id="date" required>
+    <textarea id="reason" placeholder="Motivo de Cita" required></textarea>
+    <button type="submit">Registrar Cita</button>
+</form>
+
+<script type="module">
+    // Importa las funciones necesarias de Firebase
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+    import { getDatabase, ref, push, set } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-database.js";
+
+    // Configuración de Firebase
+    const firebaseConfig = {
+        apiKey: "AIzaSyDEZF0o4FsFKsC7hz3MYbiI1T5yLZaoEIA",
+        authDomain: "proyectoe1459.firebaseapp.com",
+        projectId: "proyectoe1459",
+        storageBucket: "proyectoe1459.firebasestorage.app",
+        messagingSenderId: "1096139224605",
+        appId: "1:1096139224605:web:413b9264a7f1ce3990f8f4",
+        measurementId: "G-YHM8FJY536"
+    };
+
+    // Inicializa Firebase
+    const app = initializeApp(firebaseConfig);
+    const database = getDatabase(app);
+
+    document.getElementById('appointmentForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+
+        const appointmentData = {
+            name: document.getElementById('name').value,
+            email: document.getElementById('email').value,
+            phone: document.getElementById('phone').value,
+            date: document.getElementById('date').value,
+            reason: document.getElementById('reason').value
+        };
+
+        // Guarda los datos en Firebase
+        const appointmentRef = ref(database, 'appointments');
+        const newAppointmentRef = push(appointmentRef);
+        
+        set(newAppointmentRef, appointmentData)
+        .then(() => {
+            alert('Cita registrada exitosamente!');
+            document.getElementById('appointmentForm').reset();
+        })
+        .catch((error) => {
+            alert('Error al registrar la cita: ' + error.message);
+        });
+    });
+</script>
+
+</body>
+</html>
